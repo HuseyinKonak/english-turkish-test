@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Hüseyin Konak</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <style>
+        .saat {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .dönen-isaret {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background-color: #f1f1f1;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: dönme 4s linear infinite;
+        }
+
+        @keyframes dönme {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+    </style>
+
+
+
+    <center>
+        <div class="card" style="width: 18rem; margin-top: 25vh;">
+            <div class="saat" style="margin-top: 20px; margin-left: auto; margin-right: auto;">
+                <div class="dönen-isaret">
+                    <span id="geri_sayim"></span>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title" id="soru"></h5>
+                <p class="card-text"><br><br><input class="form-control" type="text" name="kelime" id="kelime"></p>
+                <button href="#" id="kontrol" class="btn btn-primary">Kontrol Et</button>
+            </div>
+        </div>
+    </center>
+
+
+
+    <script>
+        var inputValue = 60,
+            inputStep = 1,
+            dogru_cevap_sayi = 0,
+            yanlis_cevap_sayi = 0,
+            dogru_cevaplar = [],
+            yanlis_cevaplar = [],
+            sorular = [
+                { soru: "name", cevap: "isim" },
+                { soru: "how", cevap: "nasıl" },
+                { soru: "you", cevap: "sen" },
+                { soru: "are", cevap: "olsun" },
+                { soru: "from", cevap: "nereden" },
+                { soru: "time", cevap: "zaman" },
+                { soru: "old", cevap: "yaşlı" },
+                { soru: "good", cevap: "iyi" },
+                { soru: "bad", cevap: "kötü" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "big", cevap: "büyük" },
+                { soru: "small", cevap: "küçük" },
+                { soru: "hot", cevap: "sıcak" },
+                { soru: "cold", cevap: "soğuk" },
+                { soru: "fast", cevap: "hızlı" },
+                { soru: "slow", cevap: "yavaş" },
+                { soru: "today", cevap: "bugün" },
+                { soru: "tomorrow", cevap: "yarın" },
+                { soru: "yesterday", cevap: "dün" },
+                { soru: "love", cevap: "sevgi" },
+                { soru: "hate", cevap: "nefret" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "goodbye", cevap: "hoşça kal" },
+                { soru: "hello", cevap: "merhaba" },
+                { soru: "thank you", cevap: "teşekkür ederim" },
+                { soru: "please", cevap: "lütfen" },
+                { soru: "sorry", cevap: "üzgünüm" },
+                { soru: "help", cevap: "yardım et" },
+                { soru: "where", cevap: "nerede" },
+                { soru: "when", cevap: "ne zaman" },
+                { soru: "why", cevap: "neden" },
+                { soru: "how much", cevap: "ne kadar" },
+                { soru: "which", cevap: "hangi" },
+                { soru: "who", cevap: "kim" },
+                { soru: "what", cevap: "ne" },
+                { soru: "bus", cevap: "otobüs" },
+                { soru: "car", cevap: "araba" },
+                { soru: "train", cevap: "tren" },
+                { soru: "plane", cevap: "uçak" },
+                { soru: "bicycle", cevap: "bisiklet" },
+                { soru: "book", cevap: "kitap" },
+                { soru: "pen", cevap: "kalem" },
+                { soru: "pencil", cevap: "kurşun kalem" },
+                { soru: "bag", cevap: "çanta" },
+                { soru: "shoes", cevap: "ayakkabı" },
+                { soru: "shirt", cevap: "gömlek" },
+                { soru: "pants", cevap: "pantolon" },
+                { soru: "dress", cevap: "elbise" },
+                { soru: "apple", cevap: "elma" },
+                { soru: "banana", cevap: "muz" },
+                { soru: "orange", cevap: "portakal" },
+                { soru: "grape", cevap: "üzüm" },
+                { soru: "watermelon", cevap: "karpuz" },
+                { soru: "chicken", cevap: "tavuk" },
+                { soru: "beef", cevap: "sığır eti" },
+                { soru: "fish", cevap: "balık" },
+                { soru: "rice", cevap: "pirinç" },
+                { soru: "bread", cevap: "ekmek" },
+                { soru: "milk", cevap: "süt" },
+                { soru: "coffee", cevap: "kahve" },
+                { soru: "tea", cevap: "çay" },
+                { soru: "juice", cevap: "meyve suyu" },
+                { soru: "water", cevap: "su" },
+                { soru: "school", cevap: "okul" },
+                { soru: "university", cevap: "üniversite" },
+                { soru: "hospital", cevap: "hastane" },
+                { soru: "bank", cevap: "banka" },
+                { soru: "post office", cevap: "postane" },
+                { soru: "park", cevap: "park" },
+                { soru: "garden", cevap: "bahçe" },
+                { soru: "movie", cevap: "film" },
+                { soru: "music", cevap: "müzik" },
+                { soru: "art", cevap: "sanat" },
+                { soru: "dance", cevap: "dans" },
+                { soru: "play", cevap: "oyna" },
+                { soru: "read", cevap: "oku" },
+                { soru: "write", cevap: "yaz" },
+                { soru: "listen", cevap: "dinle" },
+                { soru: "speak", cevap: "konuş" },
+                { soru: "learn", cevap: "öğren" },
+                { soru: "study", cevap: "çalış" },
+                { soru: "swim", cevap: "yüz" },
+                { soru: "run", cevap: "koş" },
+                { soru: "walk", cevap: "yürü" },
+                { soru: "sleep", cevap: "uyumak" },
+                { soru: "eat", cevap: "ye" },
+                { soru: "drink", cevap: "iç" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "angry", cevap: "kızgın" },
+                { soru: "tired", cevap: "yorgun" },
+                { soru: "hungry", cevap: "aç" },
+                { soru: "thirsty", cevap: "susuz" },
+                { soru: "beautiful", cevap: "güzel" },
+                { soru: "ugly", cevap: "çirkin" },
+                { soru: "interesting", cevap: "ilginç" },
+                { soru: "boring", cevap: "sıkıcı" },
+                { soru: "difficult", cevap: "zor" },
+                { soru: "easy", cevap: "kolay" },
+                { soru: "expensive", cevap: "pahalı" },
+                { soru: "cheap", cevap: "ucuz" },
+                { soru: "good", cevap: "iyi" },
+                { soru: "bad", cevap: "kötü" },
+                { soru: "right", cevap: "doğru" },
+                { soru: "wrong", cevap: "yanlış" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "hot", cevap: "sıcak" },
+                { soru: "cold", cevap: "soğuk" },
+                { soru: "fast", cevap: "hızlı" },
+                { soru: "slow", cevap: "yavaş" },
+                { soru: "today", cevap: "bugün" },
+                { soru: "tomorrow", cevap: "yarın" },
+                { soru: "yesterday", cevap: "dün" },
+                { soru: "love", cevap: "sevgi" },
+                { soru: "hate", cevap: "nefret" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "goodbye", cevap: "hoşça kal" },
+                { soru: "hello", cevap: "merhaba" },
+                { soru: "thank you", cevap: "teşekkür ederim" },
+                { soru: "please", cevap: "lütfen" },
+                { soru: "sorry", cevap: "üzgünüm" },
+                { soru: "help", cevap: "yardım et" },
+                { soru: "where", cevap: "nerede" },
+                { soru: "when", cevap: "ne zaman" },
+                { soru: "why", cevap: "neden" },
+                { soru: "how much", cevap: "ne kadar" },
+                { soru: "which", cevap: "hangi" },
+                { soru: "who", cevap: "kim" },
+                { soru: "what", cevap: "ne" },
+                { soru: "bus", cevap: "otobüs" },
+                { soru: "car", cevap: "araba" },
+                { soru: "train", cevap: "tren" },
+                { soru: "plane", cevap: "uçak" },
+                { soru: "bicycle", cevap: "bisiklet" },
+                { soru: "book", cevap: "kitap" },
+                { soru: "pen", cevap: "kalem" },
+                { soru: "pencil", cevap: "kurşun kalem" },
+                { soru: "bag", cevap: "çanta" },
+                { soru: "shoes", cevap: "ayakkabı" },
+                { soru: "shirt", cevap: "gömlek" },
+                { soru: "pants", cevap: "pantolon" },
+                { soru: "dress", cevap: "elbise" },
+                { soru: "apple", cevap: "elma" },
+                { soru: "banana", cevap: "muz" },
+                { soru: "orange", cevap: "portakal" },
+                { soru: "grape", cevap: "üzüm" },
+                { soru: "watermelon", cevap: "karpuz" },
+                { soru: "chicken", cevap: "tavuk" },
+                { soru: "beef", cevap: "sığır eti" },
+                { soru: "fish", cevap: "balık" },
+                { soru: "rice", cevap: "pirinç" },
+                { soru: "bread", cevap: "ekmek" },
+                { soru: "milk", cevap: "süt" },
+                { soru: "coffee", cevap: "kahve" },
+                { soru: "tea", cevap: "çay" },
+                { soru: "juice", cevap: "meyve suyu" },
+                { soru: "water", cevap: "su" },
+                { soru: "school", cevap: "okul" },
+                { soru: "university", cevap: "üniversite" },
+                { soru: "hospital", cevap: "hastane" },
+                { soru: "bank", cevap: "banka" },
+                { soru: "post office", cevap: "postane" },
+                { soru: "park", cevap: "park" },
+                { soru: "garden", cevap: "bahçe" },
+                { soru: "movie", cevap: "film" },
+                { soru: "music", cevap: "müzik" },
+                { soru: "art", cevap: "sanat" },
+                { soru: "dance", cevap: "dans" },
+                { soru: "play", cevap: "oyna" },
+                { soru: "read", cevap: "oku" },
+                { soru: "write", cevap: "yaz" },
+                { soru: "listen", cevap: "dinle" },
+                { soru: "speak", cevap: "konuş" },
+                { soru: "learn", cevap: "öğren" },
+                { soru: "study", cevap: "çalış" },
+                { soru: "swim", cevap: "yüz" },
+                { soru: "run", cevap: "koş" },
+                { soru: "walk", cevap: "yürü" },
+                { soru: "sleep", cevap: "uyu" },
+                { soru: "eat", cevap: "ye" },
+                { soru: "drink", cevap: "iç" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "angry", cevap: "kızgın" },
+                { soru: "tired", cevap: "yorgun" },
+                { soru: "hungry", cevap: "aç" },
+                { soru: "thirsty", cevap: "susuz" },
+                { soru: "beautiful", cevap: "güzel" },
+                { soru: "ugly", cevap: "çirkin" },
+                { soru: "interesting", cevap: "ilginç" },
+                { soru: "boring", cevap: "sıkıcı" },
+                { soru: "difficult", cevap: "zor" },
+                { soru: "easy", cevap: "kolay" },
+                { soru: "expensive", cevap: "pahalı" },
+                { soru: "cheap", cevap: "ucuz" },
+                { soru: "good", cevap: "iyi" },
+                { soru: "bad", cevap: "kötü" },
+                { soru: "right", cevap: "doğru" },
+                { soru: "wrong", cevap: "yanlış" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "hot", cevap: "sıcak" },
+                { soru: "cold", cevap: "soğuk" },
+                { soru: "fast", cevap: "hızlı" },
+                { soru: "slow", cevap: "yavaş" },
+                { soru: "today", cevap: "bugün" },
+                { soru: "tomorrow", cevap: "yarın" },
+                { soru: "yesterday", cevap: "dün" },
+                { soru: "love", cevap: "sevgi" },
+                { soru: "hate", cevap: "nefret" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "goodbye", cevap: "hoşça kal" },
+                { soru: "hello", cevap: "merhaba" },
+                { soru: "thank you", cevap: "teşekkür ederim" },
+                { soru: "please", cevap: "lütfen" },
+                { soru: "sorry", cevap: "üzgünüm" },
+                { soru: "help", cevap: "yardım et" },
+                { soru: "where", cevap: "nerede" },
+                { soru: "when", cevap: "ne zaman" },
+                { soru: "why", cevap: "neden" },
+                { soru: "how much", cevap: "ne kadar" },
+                { soru: "which", cevap: "hangi" },
+                { soru: "who", cevap: "kim" },
+                { soru: "what", cevap: "ne" },
+                { soru: "bus", cevap: "otobüs" },
+                { soru: "car", cevap: "araba" },
+                { soru: "train", cevap: "tren" },
+                { soru: "plane", cevap: "uçak" },
+                { soru: "bicycle", cevap: "bisiklet" },
+                { soru: "book", cevap: "kitap" },
+                { soru: "pen", cevap: "kalem" },
+                { soru: "pencil", cevap: "kurşun kalem" },
+                { soru: "bag", cevap: "çanta" },
+                { soru: "shoes", cevap: "ayakkabı" },
+                { soru: "shirt", cevap: "gömlek" },
+                { soru: "pants", cevap: "pantolon" },
+                { soru: "dress", cevap: "elbise" },
+                { soru: "apple", cevap: "elma" },
+                { soru: "banana", cevap: "muz" },
+                { soru: "orange", cevap: "portakal" },
+                { soru: "grape", cevap: "üzüm" },
+                { soru: "watermelon", cevap: "karpuz" },
+                { soru: "chicken", cevap: "tavuk" },
+                { soru: "beef", cevap: "sığır eti" },
+                { soru: "fish", cevap: "balık" },
+                { soru: "rice", cevap: "pirinç" },
+                { soru: "bread", cevap: "ekmek" },
+                { soru: "milk", cevap: "süt" },
+                { soru: "coffee", cevap: "kahve" },
+                { soru: "tea", cevap: "çay" },
+                { soru: "juice", cevap: "meyve suyu" },
+                { soru: "water", cevap: "su" },
+                { soru: "school", cevap: "okul" },
+                { soru: "university", cevap: "üniversite" },
+                { soru: "hospital", cevap: "hastane" },
+                { soru: "bank", cevap: "banka" },
+                { soru: "post office", cevap: "postane" },
+                { soru: "park", cevap: "park" },
+                { soru: "garden", cevap: "bahçe" },
+                { soru: "movie", cevap: "film" },
+                { soru: "music", cevap: "müzik" },
+                { soru: "art", cevap: "sanat" },
+                { soru: "dance", cevap: "dans" },
+                { soru: "play", cevap: "oyna" },
+                { soru: "read", cevap: "oku" },
+                { soru: "write", cevap: "yaz" },
+                { soru: "listen", cevap: "dinle" },
+                { soru: "speak", cevap: "konuş" },
+                { soru: "learn", cevap: "öğren" },
+                { soru: "study", cevap: "çalış" },
+                { soru: "swim", cevap: "yüz" },
+                { soru: "run", cevap: "koş" },
+                { soru: "walk", cevap: "yürü" },
+                { soru: "sleep", cevap: "uyu" },
+                { soru: "eat", cevap: "ye" },
+                { soru: "drink", cevap: "iç" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "angry", cevap: "kızgın" },
+                { soru: "tired", cevap: "yorgun" },
+                { soru: "hungry", cevap: "aç" },
+                { soru: "thirsty", cevap: "susuz" },
+                { soru: "beautiful", cevap: "güzel" },
+                { soru: "ugly", cevap: "çirkin" },
+                { soru: "interesting", cevap: "ilginç" },
+                { soru: "boring", cevap: "sıkıcı" },
+                { soru: "difficult", cevap: "zor" },
+                { soru: "easy", cevap: "kolay" },
+                { soru: "expensive", cevap: "pahalı" },
+                { soru: "cheap", cevap: "ucuz" },
+                { soru: "good", cevap: "iyi" },
+                { soru: "bad", cevap: "kötü" },
+                { soru: "right", cevap: "doğru" },
+                { soru: "wrong", cevap: "yanlış" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "hot", cevap: "sıcak" },
+                { soru: "cold", cevap: "soğuk" },
+                { soru: "fast", cevap: "hızlı" },
+                { soru: "slow", cevap: "yavaş" },
+                { soru: "today", cevap: "bugün" },
+                { soru: "tomorrow", cevap: "yarın" },
+                { soru: "yesterday", cevap: "dün" },
+                { soru: "love", cevap: "sevgi" },
+                { soru: "hate", cevap: "nefret" },
+                { soru: "happy", cevap: "mutlu" },
+                { soru: "sad", cevap: "üzgün" },
+                { soru: "goodbye", cevap: "hoşça kal" },
+                { soru: "hello", cevap: "merhaba" },
+                { soru: "thank you", cevap: "teşekkür ederim" },
+                { soru: "please", cevap: "lütfen" },
+                { soru: "sorry", cevap: "üzgünüm" },
+                { soru: "help", cevap: "yardım et" }
+            ],
+            aktif_soru;
+
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+        const start = Swal.mixin({
+            title: 'Süreyi giriniz',
+            html: `<input type="number" value="${inputValue}" step="${inputStep}" class="swal2-input" id="range-value">`,
+            input: 'range',
+            inputValue,
+            allowOutsideClick: false,
+            confirmButtonText: "BAŞLA",
+            confirmButtonColor: '#3085d6',
+            inputAttributes: {
+                min: 5,
+                max: 120,
+                step: inputStep
+            },
+            didOpen: () => {
+                const inputRange = Swal.getInput()
+                const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
+                inputRange.nextElementSibling.style.display = 'none'
+                inputRange.style.width = '100%'
+                inputRange.addEventListener('input', () => {
+                    inputNumber.value = inputRange.value
+                })
+                inputNumber.addEventListener('change', () => {
+                    inputRange.value = inputNumber.value
+                })
+            }
+        })
+
+        function basla() {
+            start.fire({}).then((result) => {
+                if (result.isConfirmed) {
+                    geri_sayim(result.value);
+                    $("#geri_sayim").html(result.value);
+                    soru_yenile();
+                }
+            });
+        }
+        basla();
+
+        function geri_sayim(sure) {
+            let eski_sure = sure,
+                interval = setInterval(() => {
+                    sure--;
+                    $("#geri_sayim").html(sure);
+
+                    if (sure === 0) {
+                        clearInterval(interval);
+                        Swal.fire({
+                            title: 'Süreniz doldu!',
+                            allowOutsideClick: false,
+                            confirmButtonText: "TEKRAR DENE",
+                            confirmButtonColor: '#3085d6',
+                            html: "⏱️ " + eski_sure + " <br>✔️ " + dogru_cevap_sayi + " - ❌ " + yanlis_cevap_sayi + `<br>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <ul id="dogru_liste" style="list-style-type: none;"></ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <ul id="yanlis_liste" style="list-style-type: none;"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                            `,
+                        }).then((result) => {
+                            if (result.isConfirmed) basla();
+                        })
+                        dogru_cevaplar.forEach(cevap => {
+                            $("#dogru_liste").html($("#dogru_liste").html() + "<li>" + cevap['soru'] + " > " + cevap['cevap'] + "</li>");
+                        });
+                        yanlis_cevaplar.forEach(cevap => {
+                            $("#yanlis_liste").html($("#yanlis_liste").html() + "<li>" + cevap['soru'] + " > " + cevap['cevap'] + "</li>");
+                        });
+                        dogru_cevaplar = [],
+                            yanlis_cevaplar = [],
+                            dogru_cevap_sayi = 0,
+                            yanlis_cevap_sayi = 0;
+                    }
+                }, 1000);
+        }
+
+        $("#kontrol").click(function () {
+            kontrol_et();
+        })
+
+        document.addEventListener("keydown", function (event) {
+            if (event.keyCode === 13) kontrol_et();
+        });
+
+        function kontrol_et() {
+            if (!$("#kelime").val()) return;
+            if (($("#kelime").val()).toLowerCase() == aktif_soru["cevap"]) {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Tebrikler cevabınız doğru!'
+                })
+                dogru_cevaplar.push({
+                    "soru": aktif_soru["soru"],
+                    "cevap": aktif_soru["cevap"]
+                });
+                dogru_cevap_sayi++;
+                soru_yenile();
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Üzgünüm cevabınız yanlış!'
+                })
+                yanlis_cevaplar.push({
+                    "soru": aktif_soru["soru"],
+                    "cevap": aktif_soru["cevap"]
+                });
+                yanlis_cevap_sayi++;
+                soru_yenile();
+            }
+        }
+
+        function soru_yenile() {
+            $("#kelime").val("");
+            aktif_soru = sorular[Math.floor(Math.random() * sorular.length)];
+            $("#soru").html(aktif_soru["soru"]);
+        }
+    </script>
+
+</body>
+
+</html>
