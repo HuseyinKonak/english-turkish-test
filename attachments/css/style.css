@@ -1,0 +1,101 @@
+.menu {
+    margin: 20vh auto; /* Margin for the menu: 20% of the viewport height from the top and auto horizontally center */
+    width: 25%; /* Width of the menu: 25% */
+}
+
+.question-card * {
+    margin: 0 auto; /* Center all content horizontally */
+    text-align: center; /* Center align the content */
+}
+
+.question-card {
+    float: left; /* Float the question card to the left */
+    width: 19rem; /* Width of the question card */
+}
+
+.question {
+    margin-bottom: 25px; /* Bottom margin of the question card */
+}
+
+.question-time {
+    border: 3px solid #ccc; /* Border for the question time: 3px solid color #ccc */
+    width: 100px; /* Width of the question time */
+    height: 100px; /* Height of the question time */
+    margin: 25px auto 35px; /* Margin for the question time: 25px top, auto horizontally center, 35px bottom */
+    display: flex; /* Use flex for horizontal alignment of content */
+    justify-content: center; /* Center align content horizontally */
+    align-items: center; /* Center align content vertically */
+    border-radius: 50%; /* Border radius to make it a circle */
+    animation: rotate 4s linear infinite; /* Rotation animation for 4 seconds */
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg); /* Start rotation at 0 degrees */
+    }
+
+    100% {
+        transform: rotate(360deg); /* Complete rotation at 360 degrees */
+    }
+}
+
+.question .answer {
+    margin-top: 14px; /* Top margin of the answer input */
+    width: 100%; /* Width of the answer input */
+}
+
+.score-table {
+    width: 100%; /* Full width of the score table */
+    list-style-type: none; /* Remove default list styles */
+    display: flex; /* Use flex for vertical alignment of list items */
+    flex-direction: column; /* Stack list items vertically */
+    overflow-x: auto; /* Add horizontal scroll if necessary */
+    max-height: 34.3vh; /* Set maximum height for the score table */
+}
+
+.hidden {
+    display: none; /* Hide elements with the "hidden" class */
+}
+
+.score-card {
+    width: 28rem; /* Width of the score card */
+    float: right; /* Float the score card to the right */
+    text-align: center; /* Center align the content of the score card */
+}
+
+.score-card .card-title {
+    border-bottom: 2px solid #ccc; /* Bottom border for the card title */
+    padding-bottom: 10px; /* Bottom padding for the card title */
+    margin-bottom: 15px; /* Bottom margin for the card title */
+}
+
+.score-list-left {
+    float: left; /* Float the left side of the score list */
+}
+
+.score-list-left .player-name {
+    width: min-content; /* Set width to fit the content of player names */
+}
+
+.score-list-right {
+    float: right; /* Float the right side of the score list */
+    width: 48%; /* Width of the right side of the score list */
+    text-align: right; /* Right align the content of the right side of the score list */
+}
+
+.score-table li:first-child {
+    font-weight: bold; /* Apply bold font weight to the first list item */
+}
+
+.score-table li:last-child {
+    margin-bottom: 0; /* Remove bottom margin for the last list item */
+}
+
+.score-table li {
+    margin-bottom: 2px; /* Bottom margin for each list item */
+}
+
+.score-list-right label {
+    text-align: left; /* Left align the content of the label */
+    width: 20%; /* Width of the label */
+}
